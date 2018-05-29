@@ -42,14 +42,17 @@ echo -e "${GREEN}|_|  \_)_||_|_|_|  (______/ \____)\___)____| ||_/   (______/ \_
 echo -e "${GREEN}                                           |_|                            |_|                             "
 echo -e "${GREEN}"
 }
+# ascii art from: http://patorjk.com/software/taag/
+# font: Stop
 
-echo -e "${GREEN}[+]${RESET} Dist-upgrade : ${dist}"
+
 
 function usage {
-    echo -e "${YELLOW}Usage: $0 [-d] [--ftp-port 2121] [-u GreatUncleBulgaria] [-h]"
+    echo -e "${YELLOW}Usage: $0 -s [-d] [--ftp-port 2121] [-u GreatUncleBulgaria] [-h]"
     echo -e "${YELLOW}       -d: Perform 'dist-upgrade', defaults to 'false', varies script execution time."
     echo -e "${YELLOW}       --ftp-port: Specify the port for the FTP server to run on, defaults to 21-TCP."
     echo -e "${YELLOW}       -h: Help"
+    echo -e "${YELLOW}       -s: Start the script, defaults to 'false', needs to be stated for script to run."
     echo -e "${YELLOW}       -u: Specify a username for service creation, defaults to 'User1'."
 }
 
@@ -57,6 +60,14 @@ function usage {
 
 # Print the banner function
 banner
+
+
+# Start the script?
+
+if [ "${start}" != "false" ]; then
+	usage
+else
+  	echo -e "${BLUE}[+]${RESET} Starting setup script'."
 
 
 # Check running as root
@@ -72,6 +83,7 @@ fi
 
 dist="false"
 ftpport="21"
+start="false"
 username="user1"
 
 
@@ -82,6 +94,7 @@ while getopts "d:ftp-port:u:h" OPT; do
         d) dist="true";;
         ftp-port) ftpport=${ftp-port};;
         h) usage; exit 0;;
+        s) start="true";;
         u) username=${OPTARG};;
         *) usage; exit 0;;
     esac
@@ -98,7 +111,7 @@ echo -e "${BLUE}[+]${RESET} 	Username : ${username}"
 
 
 
-# add in the rolling repos
+# add in the kali rolling repos
 
 echo -e "${BLUE}[+]${RESET} Adding the Kali Rolling Repositories to /etc/apt/sources.list."
 echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
@@ -110,7 +123,7 @@ echo "# deb-src http://http.kali.org/kali kali-rolling main contrib non-free" >>
 # update apt
 
 echo -e "${BLUE}[+]${RESET} Starting 'apt-get update'."
-apt-get update || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get update || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
 
 
 
@@ -118,38 +131,38 @@ apt-get update || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
 
 if [ "${dist}" != "false" ]; then
   	echo -e "${BLUE}[+]${RESET} Starting 'apt-get dist-upgrade -y'."
-  	apt-get dist-upgrade -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+  	apt-get dist-upgrade -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
 
 
 
 # install vbox guest editions
 
 echo -e "${BLUE}[+]${RESET} Installing VirtualBox Guest Editions X11."
-apt-get install virtualbox-guest-x11 -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get install virtualbox-guest-x11 -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
 
 
 
 # install pureftpd
 
 echo -e "${BLUE}[+]${RESET} Installing PureFTPd."
-apt-get install pure-ftpd -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get install pure-ftpd -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
 
 
 
 # install atftpd
 
 echo -e "${BLUE}[+]${RESET} Installing ATFTPd."
-apt-get install atftpd -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get install atftpd -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
 
 
 
 # install netminer and dependencies
 
 echo -e "${BLUE}[+]${RESET} Installing NetMiner and dependencies."
-apt-get install libmono-system-windows-forms4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
-apt-get install libmono-system-web4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
-apt-get install libmono-system-net4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
-apt-get install libmono-system-runtime-serialization4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get install libmono-system-windows-forms4.0-cil -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
+apt-get install libmono-system-web4.0-cil -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
+apt-get install libmono-system-net4.0-cil -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
+apt-get install libmono-system-runtime-serialization4.0-cil -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
 
 wget www.netresec.com/?download=NetworkMiner -O /tmp/nm.zip
 unzip /tmp/nm.zip -d /opt/
@@ -217,23 +230,6 @@ echo -e "${YELLOW}[+]${RESET} 		ws='python -m SimpleHTTPServer'"
 echo -e "${YELLOW}[+]${RESET} 		jn='john --wordlist=/usr/share/wordlists/rockyou.txt'"
 echo -e "${YELLOW}[+]${RESET} 		xc='xclip -selection c.'"
 echo -e "${YELLOW}[+]${RESET} 		sS='searchsploit'"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
