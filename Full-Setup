@@ -48,7 +48,7 @@ function usage {
     echo -e "${YELLOW}       -h | --help: Help"
     echo -e "${YELLOW}       -s | --start: Start the script, defaults to 'false', needs to be stated for script to run."
     echo -e "${YELLOW}       -u | --service-username: Specify a username for service creation, defaults to 'User1'."
-    echo -e "${YELLOW}       			      This username will be used for all created service accounts."
+    echo -e "${YELLOW}       			        This username will be used for all created service accounts."
 }
 
 
