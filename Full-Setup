@@ -75,17 +75,47 @@ start="false"
 username="user1"
 
 
+#old arg loop
+#while getopts "d:ftp-port:h:s:u" OPT; do
+#    case $OPT in
+#        d) dist="true";;
+#        ftp-port) ftpport=${ftp-port};;
+#        h) usage; exit 0;;
+#        s) start="true";;
+#        u) username=${OPTARG};;
+#        *) usage; exit 0;;
+#   esac
+#done
 
-while getopts "d:ftp-port:h:s:u" OPT; do
-    case $OPT in
-        d) dist="true";;
-        ftp-port) ftpport=${ftp-port};;
-        h) usage; exit 0;;
-        s) start="true";;
-        u) username=${OPTARG};;
-        *) usage; exit 0;;
-    esac
+
+
+
+while [[ "${#}" -gt 0 && ."${1}" == .-* ]]; do
+  opt="${1}";
+  shift;
+  case "$(echo ${opt} | tr '[:upper:]' '[:lower:]')" in
+    -|-- ) break 2;;
+
+    -d|--dist-upgrade )
+       dist=true;;
+
+    -ftp-port|--ftp-port )
+       ftpport="${1}"; shift;;
+
+    -h|--help )
+       usage; exit 0;;
+
+    -s|--start )
+       start=true;;
+
+    -u|--service-username )
+       username="${1}"; shift;;
+
+    *) echo -e "${RED}[!]${RESET} Unknown option: ${RED}${x}${RESET}" 1>&2 && exit 1;;
+   esac
 done
+
+
 
 
 # Print the banner function
@@ -95,10 +125,10 @@ banner
 # Start the script?
 
 if [ "${start}" != "false" ]; then
-	usage
-	exit 1
+	echo -e "${BLUE}[+]${RESET} Starting setup script'."
 else
-  	echo -e "${BLUE}[+]${RESET} Starting setup script'."
+  	usage
+	exit 1
 fi
 
 
@@ -241,11 +271,6 @@ echo -e "${YELLOW}[+]${RESET} 		ws='python -m SimpleHTTPServer'"
 echo -e "${YELLOW}[+]${RESET} 		jn='john --wordlist=/usr/share/wordlists/rockyou.txt'"
 echo -e "${YELLOW}[+]${RESET} 		xc='xclip -selection c.'"
 echo -e "${YELLOW}[+]${RESET} 		sS='searchsploit'"
-
-
-
-
-
 
 
 
