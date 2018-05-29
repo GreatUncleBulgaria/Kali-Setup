@@ -66,6 +66,7 @@ banner
 
 if [ "${start}" != "false" ]; then
 	usage
+	exit 1
 else
   	echo -e "${BLUE}[+]${RESET} Starting setup script'."
 fi
@@ -144,6 +145,8 @@ apt-get install virtualbox-guest-x11 -y || echo -e " '${RED}'[!] Issue with apt-
 
 
 
+## INSTALLING SERVICES
+
 # install pureftpd
 
 echo -e "${BLUE}[+]${RESET} Installing PureFTPd."
@@ -158,6 +161,8 @@ apt-get install atftpd -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1
 
 
 
+## INSTALLING USEFUL TOOLS
+
 # install netminer and dependencies
 
 echo -e "${BLUE}[+]${RESET} Installing NetMiner and dependencies."
@@ -168,10 +173,17 @@ apt-get install libmono-system-runtime-serialization4.0-cil -y || echo -e " '${R
 
 wget www.netresec.com/?download=NetworkMiner -O /tmp/nm.zip
 unzip /tmp/nm.zip -d /opt/
+rm /tmp/nm.zip
 cd /opt/NetworkMiner*
 chmod +x NetworkMiner.exe
 chmod -R go+w AssembledFiles/
 chmod -R go+w Captures/
+
+
+
+# install the ftp client
+
+apt-get install ftp -y
 
 
 
@@ -212,12 +224,9 @@ echo "alias sS='searchsploit'" >> /etc/bash.bashrc
 
 
 
-
-
-
 # print script completion information
 
-echo -e "${BLUE}[+]${RESET} Script completed"
+echo -e "${BLUE}[+]${RESET} Script completed."
 
 echo -e "${YELLOW}[+]${RESET} PureFTPd information:"
 echo -e "${YELLOW}[+]${RESET} 		Server port: ${ftpport}"
