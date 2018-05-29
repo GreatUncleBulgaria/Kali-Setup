@@ -5,15 +5,8 @@
 ## Author: GreatUncleBulgaria	##
 #
 #	To Do:
-# 		passing arguments on script run for usernames etc
-#		install vbox stuff
-# 		bashrc shotrcuts
-#		updates
-#		setup pureftpd
-#		setup atftpd
 #		setup an ssh user
 #		install all the useful tools
-#		install and setup metminer
 
 
 ## Colourise Output
@@ -49,11 +42,12 @@ echo -e "${GREEN}"
 
 function usage {
     echo -e "${YELLOW}Usage: $0 -s [-d] [--ftp-port 2121] [-u GreatUncleBulgaria] [-h]"
-    echo -e "${YELLOW}       -d: Perform 'dist-upgrade', defaults to 'false', varies script execution time."
-    echo -e "${YELLOW}       --ftp-port: Specify the port for the FTP server to run on, defaults to 21-TCP."
-    echo -e "${YELLOW}       -h: Help"
-    echo -e "${YELLOW}       -s: Start the script, defaults to 'false', needs to be stated for script to run."
-    echo -e "${YELLOW}       -u: Specify a username for service creation, defaults to 'User1'."
+    printf "\n"
+    echo -e "${YELLOW}       -d | --dist-upgrade: Perform 'dist-upgrade', defaults to 'false', varies script execution time."
+    echo -e "${YELLOW}       -ftp-port | --ftp-port: Specify the port for the FTP server to run on, defaults to 21-TCP."
+    echo -e "${YELLOW}       -h | --help: Help"
+    echo -e "${YELLOW}       -s | --start: Start the script, defaults to 'false', needs to be stated for script to run."
+    echo -e "${YELLOW}       -u | --service-username: Specify a username for service creation, defaults to 'User1', will be used for all created service accounts."
 }
 
 
@@ -73,20 +67,6 @@ dist="false"
 ftpport="21"
 start="false"
 username="user1"
-
-
-#old arg loop
-#while getopts "d:ftp-port:h:s:u" OPT; do
-#    case $OPT in
-#        d) dist="true";;
-#        ftp-port) ftpport=${ftp-port};;
-#        h) usage; exit 0;;
-#        s) start="true";;
-#        u) username=${OPTARG};;
-#        *) usage; exit 0;;
-#   esac
-#done
-
 
 
 
@@ -211,6 +191,7 @@ chmod -R go+w Captures/
 
 # install the ftp client
 
+echo -e "${BLUE}[+]${RESET} Installing useful tools."
 apt-get install ftp -y
 
 
@@ -255,7 +236,9 @@ echo "alias sS='searchsploit'" >> /etc/bash.bashrc
 # print script completion information
 
 echo -e "${BLUE}[+]${RESET} Script completed."
-
+printf "\n\n"
+echo -e "${YELLOW}[+]${RESET} !!! All services are stopped by default, you will have to start them manually !!!"
+printf "\n\n"
 echo -e "${YELLOW}[+]${RESET} PureFTPd information:"
 echo -e "${YELLOW}[+]${RESET} 		Server port: ${ftpport}"
 echo -e "${YELLOW}[+]${RESET} 		User created: ${username}"
@@ -271,10 +254,3 @@ echo -e "${YELLOW}[+]${RESET} 		ws='python -m SimpleHTTPServer'"
 echo -e "${YELLOW}[+]${RESET} 		jn='john --wordlist=/usr/share/wordlists/rockyou.txt'"
 echo -e "${YELLOW}[+]${RESET} 		xc='xclip -selection c.'"
 echo -e "${YELLOW}[+]${RESET} 		sS='searchsploit'"
-
-
-
-
-
-
-
