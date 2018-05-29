@@ -68,6 +68,8 @@ if [ "${start}" != "false" ]; then
 	usage
 else
   	echo -e "${BLUE}[+]${RESET} Starting setup script'."
+fi
+
 
 
 # Check running as root
@@ -132,7 +134,7 @@ apt-get update || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
 if [ "${dist}" != "false" ]; then
   	echo -e "${BLUE}[+]${RESET} Starting 'apt-get dist-upgrade -y'."
   	apt-get dist-upgrade -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
-
+fi
 
 
 # install vbox guest editions
@@ -215,6 +217,8 @@ echo "alias sS='searchsploit'" >> /etc/bash.bashrc
 
 # print script completion information
 
+echo -e "${BLUE}[+]${RESET} Script completed"
+
 echo -e "${YELLOW}[+]${RESET} PureFTPd information:"
 echo -e "${YELLOW}[+]${RESET} 		Server port: ${ftpport}"
 echo -e "${YELLOW}[+]${RESET} 		User created: ${username}"
@@ -230,6 +234,11 @@ echo -e "${YELLOW}[+]${RESET} 		ws='python -m SimpleHTTPServer'"
 echo -e "${YELLOW}[+]${RESET} 		jn='john --wordlist=/usr/share/wordlists/rockyou.txt'"
 echo -e "${YELLOW}[+]${RESET} 		xc='xclip -selection c.'"
 echo -e "${YELLOW}[+]${RESET} 		sS='searchsploit'"
+
+
+
+
+
 
 
 
