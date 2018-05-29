@@ -1,11 +1,11 @@
 #!/bin/bash
 
-## Kali Fresh Setup Script  ##
+## Kali Setup Script  ##
 ## 
 ## Author: GreatUncleBulgaria	##
 #
 #	To Do:
-# 	
+# 		passing arguments on script run for usernames etc
 #		install vbox stuff
 # 		bashrc shotrcuts
 #		updates
@@ -16,53 +16,140 @@
 #		install and setup metminer
 
 
-## Colourise Output - Pinched from G0tmi1k
+## Colourise Output
 RED="\033[01;31m"      # Issues/Errors
 GREEN="\033[01;32m"    # Success
 YELLOW="\033[01;33m"   # Warnings/Information
-BLUE="\033[01;34m"     # Heading
-BOLD="\033[01;01m"     # Highlight
+BLUE="\033[01;34m"     # Status
 RESET="\033[00m"       # Normal
+
+
+function banner {
+
+echo -e "${GREEN}  ______                         _     _             _          ______        _                   _       "
+echo -e "${GREEN} / _____)                _      | |   | |           | |        (____  \      | |                 (_)      "
+echo -e "${GREEN}| /  ___  ____ ____ ____| |_    | |   | |____   ____| | ____    ____)  )_   _| | ____  ____  ____ _  ____ "
+echo -e "${GREEN}| | (___)/ ___) _  ) _  |  _)   | |   | |  _ \ / ___) |/ _  )  |  __  (| | | | |/ _  |/ _  |/ ___) |/ _  |"
+echo -e "${GREEN}| \____/| |  ( (/ ( ( | | |__   | |___| | | | ( (___| ( (/ /   | |__)  ) |_| | ( ( | ( ( | | |   | ( ( | |"
+echo -e "${GREEN} \_____/|_|   \____)_||_|\___)   \______|_| |_|\____)_|\____)  |______/ \____|_|\_|| |\_||_|_|   |_|\_||_|"
+echo -e "${GREEN}                                                                               (_____|                    "
+echo -e "${GREEN} _    _      _ _       _                                _                _                                "
+echo -e "${GREEN}| |  / )    | (_)     | |         _                    | |              (_)      _                        "
+echo -e "${GREEN}| | / / ____| |_       \ \   ____| |_ _   _ ____        \ \   ____  ____ _ ____ | |_                      "
+echo -e "${GREEN}| |< < / _  | | |       \ \ / _  )  _) | | |  _ \        \ \ / ___)/ ___) |  _ \|  _)                     "
+echo -e "${GREEN}| | \ ( ( | | | |   _____) | (/ /| |_| |_| | | | |   _____) | (___| |   | | | | | |__                     "
+echo -e "${GREEN}|_|  \_)_||_|_|_|  (______/ \____)\___)____| ||_/   (______/ \____)_|   |_| ||_/ \___)                    "
+echo -e "${GREEN}                                           |_|                            |_|                             "
+echo -e "${GREEN}"
+}
+
+echo -e "${GREEN}[+]${RESET} Dist-upgrade : ${dist}"
+
+function usage {
+    echo -e "${YELLOW}Usage: $0 [-d] [--ftp-port 2121] [-u GreatUncleBulgaria] [-h]"
+    echo -e "${YELLOW}       -d: Perform 'dist-upgrade', defaults to 'false', varies script execution time."
+    echo -e "${YELLOW}       --ftp-port: Specify the port for the FTP server to run on, defaults to 21-TCP."
+    echo -e "${YELLOW}       -h: Help"
+    echo -e "${YELLOW}       -u: Specify a username for service creation, defaults to 'User1'."
+}
+
+
+
+# Print the banner function
+banner
+
+
+# Check running as root
+
+if [[ ! $(id -u) == 0 ]]; then
+    echo -e "${RED}[!]${RESET} Script need to be ran as root"
+    exit 1
+fi
+
+
+
+# assign script defaults
+
+dist="false"
+ftpport="21"
+username="user1"
+
+
+
+
+while getopts "d:ftp-port:u:h" OPT; do
+    case $OPT in
+        d) dist="true";;
+        ftp-port) ftpport=${ftp-port};;
+        h) usage; exit 0;;
+        u) username=${OPTARG};;
+        *) usage; exit 0;;
+    esac
+done
+
+
+
+# printing script args
+
+echo -e "${BLUE}[+]${RESET} Script running with the following parameters;"
+echo -e "${BLUE}[+]${RESET} 	Dist-upgrade : ${dist}"
+echo -e "${BLUE}[+]${RESET} 	FTP Port : ${ftpport}"
+echo -e "${BLUE}[+]${RESET} 	Username : ${username}"
+
 
 
 # add in the rolling repos
 
+echo -e "${BLUE}[+]${RESET} Adding the Kali Rolling Repositories to /etc/apt/sources.list."
 echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
 echo "# For source package access, uncomment the following line" >> /etc/apt/sources.list
 echo "# deb-src http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
 
 
 
-# update apt and OS
+# update apt
 
-apt-get update && apt-get dist-upgrade -y
+echo -e "${BLUE}[+]${RESET} Starting 'apt-get update'."
+apt-get update || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+
+
+
+# update the OS
+
+if [ "${dist}" != "false" ]; then
+  	echo -e "${BLUE}[+]${RESET} Starting 'apt-get dist-upgrade -y'."
+  	apt-get dist-upgrade -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
 
 
 
 # install vbox guest editions
 
-apt-get install virtualbox-guest-x11 -y
+echo -e "${BLUE}[+]${RESET} Installing VirtualBox Guest Editions X11."
+apt-get install virtualbox-guest-x11 -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
 
 
 
 # install pureftpd
 
-apt-get install pure-ftpd -y
+echo -e "${BLUE}[+]${RESET} Installing PureFTPd."
+apt-get install pure-ftpd -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
 
 
 
 # install atftpd
 
-apt-get install atftpd -y
+echo -e "${BLUE}[+]${RESET} Installing ATFTPd."
+apt-get install atftpd -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
 
 
 
 # install netminer and dependencies
 
-apt-get install libmono-system-windows-forms4.0-cil -y
-apt-get install libmono-system-web4.0-cil -y
-apt-get install libmono-system-net4.0-cil -y
-apt-get install libmono-system-runtime-serialization4.0-cil -y
+echo -e "${BLUE}[+]${RESET} Installing NetMiner and dependencies."
+apt-get install libmono-system-windows-forms4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get install libmono-system-web4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get install libmono-system-net4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
+apt-get install libmono-system-runtime-serialization4.0-cil -y || echo -e ' '${RED}'[!] Issue with apt-get'${RESET} 1>&2
 
 wget www.netresec.com/?download=NetworkMiner -O /tmp/nm.zip
 unzip /tmp/nm.zip -d /opt/
@@ -75,29 +162,67 @@ chmod -R go+w Captures/
 
 # setup pure-ftpd
 
-echo "21" > /etc/pure-ftpd/conf/Bind
+echo -e "${BLUE}[+]${RESET} Setting up PureFTPd."
+echo ${ftpport} > /etc/pure-ftpd/conf/Bind
 groupadd ftpgroup
 useradd -g ftpgroup -d /dev/null -s /etc ftpuser
-pure-pw useradd user1 -u ftpuser -d /srv/ftphome
-
-	# will need to enter password at this stage
-
+echo -e "${YELLOW}[+]${RESET} You will need to enter a password for the FTP user account and confirm it."
+pure-pw useradd ${username} -u ftpuser -d /srv/ftp
 pure-pw mkdb
 cd /etc/pure-ftpd/auth
 ln -s /etc/pure-ftpd/conf/PureDB 60pdb
-mkdir -p /srv/ftphome
-chown -R ftpuser:ftpgroup /srv/ftphome/
-pure-pw userdel user1
+mkdir -p /srv/ftp
+chown -R ftpuser:ftpgroup /srv/ftp/
+
+# to delete users
+# pure-pw userdel user1
 
 
 
 # setup atftpd
 
+echo -e "${BLUE}[+]${RESET} Setting up ATFTPd."
 sed -e 's/^USE_INETD=true/USE_INETD=false/g' -i /etc/default/atftpd
 
 
 
-# 
+# add bashrc shortcuts
+
+echo -e "${BLUE}[+]${RESET} Assigning useful bash shortcuts."
+echo "alias netminer='mono /opt/NetworkMiner_2-2/NetworkMiner.exe'" >> /etc/bash.bashrc
+echo "alias ws='python -m SimpleHTTPServer'" >> /etc/bash.bashrc
+echo "alias jn='john --wordlist=/usr/share/wordlists/rockyou.txt'" >> /etc/bash.bashrc
+echo "alias xc='xclip -selection c.'" >> /etc/bash.bashrc
+echo "alias sS='searchsploit'" >> /etc/bash.bashrc
+
+
+
+
+
+
+# print script completion information
+
+echo -e "${YELLOW}[+]${RESET} PureFTPd information:"
+echo -e "${YELLOW}[+]${RESET} 		Server port: ${ftpport}"
+echo -e "${YELLOW}[+]${RESET} 		User created: ${username}"
+echo -e "${YELLOW}[+]${RESET} 		Start/stop/restart the service: service pureftpd start|stop|restart"
+echo -e "${YELLOW}[+]${RESET} 		Delete user command:  pure-pw userdel ${username}"
+echo -e "${YELLOW}[+]${RESET} 		Create user commands: pure-pw useradd NEWUSERNAME -u ftpuser -d /srv/ftp"
+echo -e "${YELLOW}[+]${RESET} 							  pure-pw mkdb"
+echo -e "${YELLOW}[+]${RESET} 							  service pureftpd restart"
+
+echo -e "${YELLOW}[+]${RESET} Assigned alias:"
+echo -e "${YELLOW}[+]${RESET} 		netminer='mono /opt/NetworkMiner_2-2/NetworkMiner.exe'"
+echo -e "${YELLOW}[+]${RESET} 		ws='python -m SimpleHTTPServer'"
+echo -e "${YELLOW}[+]${RESET} 		jn='john --wordlist=/usr/share/wordlists/rockyou.txt'"
+echo -e "${YELLOW}[+]${RESET} 		xc='xclip -selection c.'"
+echo -e "${YELLOW}[+]${RESET} 		sS='searchsploit'"
+
+
+
+
+
+
 
 
 
