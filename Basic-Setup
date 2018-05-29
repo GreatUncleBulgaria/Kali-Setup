@@ -1,0 +1,17 @@
+# add in the rolling repos
+
+echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
+echo "# For source package access, uncomment the following line" >> /etc/apt/sources.list
+echo "# deb-src http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
+
+
+
+# update apt and OS
+
+apt-get update && apt-get dist-upgrade -y
+
+
+
+# install vbox guest editions
+
+apt-get install virtualbox-guest-x11 -y
