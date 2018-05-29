@@ -58,21 +58,6 @@ function usage {
 
 
 
-# Print the banner function
-banner
-
-
-# Start the script?
-
-if [ "${start}" != "false" ]; then
-	usage
-	exit 1
-else
-  	echo -e "${BLUE}[+]${RESET} Starting setup script'."
-fi
-
-
-
 # Check running as root
 
 if [[ ! $(id -u) == 0 ]]; then
@@ -91,8 +76,7 @@ username="user1"
 
 
 
-
-while getopts "d:ftp-port:u:h" OPT; do
+while getopts "d:ftp-port:h:s:u" OPT; do
     case $OPT in
         d) dist="true";;
         ftp-port) ftpport=${ftp-port};;
@@ -102,6 +86,20 @@ while getopts "d:ftp-port:u:h" OPT; do
         *) usage; exit 0;;
     esac
 done
+
+
+# Print the banner function
+banner
+
+
+# Start the script?
+
+if [ "${start}" != "false" ]; then
+	usage
+	exit 1
+else
+  	echo -e "${BLUE}[+]${RESET} Starting setup script'."
+fi
 
 
 
