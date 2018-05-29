@@ -1,0 +1,118 @@
+#!/bin/bash
+
+## Kali Fresh Setup Script  ##
+## 
+## Author: GreatUncleBulgaria	##
+#
+#	To Do:
+# 	
+#		install vbox stuff
+# 		bashrc shotrcuts
+#		updates
+#		setup pureftpd
+#		setup atftpd
+#		setup an ssh user
+#		install all the useful tools
+#		install and setup metminer
+
+
+## Colourise Output - Pinched from G0tmi1k
+RED="\033[01;31m"      # Issues/Errors
+GREEN="\033[01;32m"    # Success
+YELLOW="\033[01;33m"   # Warnings/Information
+BLUE="\033[01;34m"     # Heading
+BOLD="\033[01;01m"     # Highlight
+RESET="\033[00m"       # Normal
+
+
+# add in the rolling repos
+
+echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
+echo "# For source package access, uncomment the following line" >> /etc/apt/sources.list
+echo "# deb-src http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
+
+
+
+# update apt and OS
+
+apt-get update && apt-get dist-upgrade -y
+
+
+
+# install vbox guest editions
+
+apt-get install virtualbox-guest-x11 -y
+
+
+
+# install pureftpd
+
+apt-get install pure-ftpd -y
+
+
+
+# install atftpd
+
+apt-get install atftpd -y
+
+
+
+# install netminer and dependencies
+
+apt-get install libmono-system-windows-forms4.0-cil -y
+apt-get install libmono-system-web4.0-cil -y
+apt-get install libmono-system-net4.0-cil -y
+apt-get install libmono-system-runtime-serialization4.0-cil -y
+
+wget www.netresec.com/?download=NetworkMiner -O /tmp/nm.zip
+unzip /tmp/nm.zip -d /opt/
+cd /opt/NetworkMiner*
+chmod +x NetworkMiner.exe
+chmod -R go+w AssembledFiles/
+chmod -R go+w Captures/
+
+
+
+# setup pure-ftpd
+
+echo "21" > /etc/pure-ftpd/conf/Bind
+groupadd ftpgroup
+useradd -g ftpgroup -d /dev/null -s /etc ftpuser
+pure-pw useradd user1 -u ftpuser -d /srv/ftphome
+
+	# will need to enter password at this stage
+
+pure-pw mkdb
+cd /etc/pure-ftpd/auth
+ln -s /etc/pure-ftpd/conf/PureDB 60pdb
+mkdir -p /srv/ftphome
+chown -R ftpuser:ftpgroup /srv/ftphome/
+pure-pw userdel user1
+
+
+
+# setup atftpd
+
+sed -e 's/^USE_INETD=true/USE_INETD=false/g' -i /etc/default/atftpd
+
+
+
+# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
