@@ -8,8 +8,6 @@
 #		setup an ssh user
 #		install all the useful tools
 # 		possibly add dash-to-dock tweaks
-#		need to fix the print install-list section, ideally having a print list function and passing a
-#			list to that.
 
 
 
@@ -38,6 +36,7 @@ echo -e "${GREEN}| | \ ( ( | | | |   _____) | (/ /| |_| |_| | | | |   _____) | (
 echo -e "${GREEN}|_|  \_)_||_|_|_|  (______/ \____)\___)____| ||_/   (______/ \____)_|   |_| ||_/ \___)                    "
 echo -e "${GREEN}                                           |_|                            |_|                             "
 echo -e "${GREEN}Version 2.0"
+echo -e "${GREEN}"
 }
 # ascii art from: http://patorjk.com/software/taag/
 # font: Stop
@@ -53,21 +52,18 @@ function usage {
     echo -e "${YELLOW}       -r | --reboot: Reboot the system automatically on script completion, defaults to 'false'."
     echo -e "${YELLOW}       -s | --start: Start the script, defaults to 'false', needs to be stated for script to run."
     echo -e "${YELLOW}       -u | --service-username: Specify a username for service creation, defaults to 'User1'."
-    echo -e "${YELLOW}       			      This username will be used for all created service accounts."
+    echo -e "${YELLOW}                  This username will be used for all created service accounts."
     echo -e "${YELLOW}       -v | --vbox: Install VirtualBox guest editions."
-    echo -e "${YELLOW}       -vs| --vbox-sharename: Specify the VirtualBox shared folder name, requires -vm. 
-    										  This must match the shared folder name in the VM settings, defaults to 'VBOX-Share'."
-    echo -e "${YELLOW}       -vm| --vbox-mountpoint: Specify the VirtualBox desired mount point.
-    										  Requires -vs and fully qualified path, defaults to '/media/vbox-share'."
-
-    echo -e "${YELLOW}       Default install list:"
-    echo -e "${YELLOW}       	${print-list '${install-list}'}"
-
+    echo -e "${YELLOW}       -vs| --vbox-sharename: Specify the VirtualBox shared folder name, requires -vm. "
+    echo -e "${YELLOW}                  This must match the shared folder name in the VM settings, defaults to 'VBOX-Share'."
+    echo -e "${YELLOW}       -vm| --vbox-mountpoint: Specify the VirtualBox desired mount point."
+    echo -e "${YELLOW}                  Requires -vs and fully qualified path, defaults to '/media/vbox-share'."
+	echo -e "${YELLOW}"
+    echo -e "${YELLOW}       This script will install and configure the following;"
+    for i in ${default[@]}; do echo -e "${YELLOW}           ${i}"; done 
 }
 
-function print-list {
-	for i in ${install-list[@]}; do printf '%s\n' ${i}; done
-}
+
 
 # Check running as root
 
@@ -78,22 +74,22 @@ fi
 
 
 
-# assign script default parameters
+# assign script defaults
 
 dist="false"
 ftpport="21"
 start="false"
 reboot="false"
 username="user1"
-
 vbox="false"
 vboxShareName="VBOX-Share"
 vboxMountPoint="/media/vbox-share"
 
 
+
 # default install list
 
-install-list=(pure-ftpd atftpd virtualbox-guest-x11 netminer ftp)
+default=("pure-ftpd" "atftpd" "netminer" "ftp")
 
 
 
@@ -155,13 +151,13 @@ fi
 # printing script args
 
 echo -e "${BLUE}[+]${RESET} Script running with the following parameters;"
-echo -e "${BLUE}[+]${RESET} 	Dist-upgrade : ${dist}"
-echo -e "${BLUE}[+]${RESET} 	FTP Port : ${ftpport}"
-echo -e "${BLUE}[+]${RESET} 	Username : ${username}"
-echo -e "${BLUE}[+]${RESET} 	Reboot : ${reboot}"
-echo -e "${BLUE}[+]${RESET} 	VirtualBox Guest Editions Install : ${vbox}"
-echo -e "${BLUE}[+]${RESET} 	VirtualBox Share Name : ${vboxShareName}"
-echo -e "${BLUE}[+]${RESET} 	VirtualBox Mount Point : ${vboxMountPoint}"
+echo -e "${BLUE}[+]${RESET}   Dist-upgrade : ${dist}"
+echo -e "${BLUE}[+]${RESET}   FTP Port : ${ftpport}"
+echo -e "${BLUE}[+]${RESET}   Username : ${username}"
+echo -e "${BLUE}[+]${RESET}   Reboot : ${reboot}"
+echo -e "${BLUE}[+]${RESET}   VirtualBox Guest Editions Install : ${vbox}"
+echo -e "${BLUE}[+]${RESET}   VirtualBox Share Name : ${vboxShareName}"
+echo -e "${BLUE}[+]${RESET}   VirtualBox Mount Point : ${vboxMountPoint}"
 
 
 
@@ -192,10 +188,11 @@ fi
 # install vbox guest editions
 
 if [ "${vbox}" != "false" ]; then
-  	echo -e "${BLUE}[+]${RESET} Installing VirtualBox Guest Editions X11."
-  	apt-get install virtualbox-guest-x11 -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
-  	mkdir -p ${vboxMountPoint}
+    echo -e "${BLUE}[+]${RESET} Installing VirtualBox Guest Editions X11."
+    apt-get install virtualbox-guest-x11 -y || echo -e " '${RED}'[!] Issue with apt-get"${RESET} 1>&2
+    mkdir -p ${vboxMountPoint}
 fi
+
 
 
 ## INSTALLING SERVICES
@@ -277,7 +274,7 @@ echo "alias xc='xclip -selection c.'" >> /etc/bash.bashrc
 echo "alias sS='searchsploit'" >> /etc/bash.bashrc
 
 if [ "${vbox}" != "false" ]; then
-	echo "alias ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}'" >> /etc/bash.bashrc
+  echo "alias ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}'" >> /etc/bash.bashrc
 fi
 
 
@@ -311,40 +308,42 @@ printf "\n\n"
 echo -e "${YELLOW}[+]${RESET} !!! All services are stopped by default, you will have to start them manually !!!"
 printf "\n\n"
 echo -e "${YELLOW}[+]${RESET} PureFTPd information:"
-echo -e "${YELLOW}[+]${RESET} 		Server port: ${ftpport}"
-echo -e "${YELLOW}[+]${RESET} 		User created: ${username}"
-echo -e "${YELLOW}[+]${RESET} 		Start/stop/restart the service: service pure-ftpd start|stop|restart"
-echo -e "${YELLOW}[+]${RESET} 		Delete user command:  pure-pw userdel ${username}"
-echo -e "${YELLOW}[+]${RESET} 		Create user commands: pure-pw useradd NEWUSERNAME -u ftpuser -d /srv/ftp"
-echo -e "${YELLOW}[+]${RESET} 							  pure-pw mkdb"
-echo -e "${YELLOW}[+]${RESET} 							  service pureftpd restart"
+echo -e "${YELLOW}[+]${RESET}     Server port: ${ftpport}"
+echo -e "${YELLOW}[+]${RESET}     User created: ${username}"
+echo -e "${YELLOW}[+]${RESET}     Start/stop/restart the service: service pure-ftpd start|stop|restart"
+echo -e "${YELLOW}[+]${RESET}     Delete user command:  pure-pw userdel ${username}"
+echo -e "${YELLOW}[+]${RESET}     Create user commands: pure-pw useradd NEWUSERNAME -u ftpuser -d /srv/ftp"
+echo -e "${YELLOW}[+]${RESET}                 pure-pw mkdb"
+echo -e "${YELLOW}[+]${RESET}                 service pureftpd restart"
 
 echo -e "${YELLOW}[+]${RESET} ATFTPd information:"
-echo -e "${YELLOW}[+]${RESET} 		Start/stop/restart the service: service atftpd start|stop|restart"
+echo -e "${YELLOW}[+]${RESET}     Start/stop/restart the service: service atftpd start|stop|restart"
 
 echo -e "${YELLOW}[+]${RESET} Assigned alias:"
-echo -e "${YELLOW}[+]${RESET} 		netminer='mono /opt/NetworkMiner_2-2/NetworkMiner.exe'"
-echo -e "${YELLOW}[+]${RESET} 		ws='python -m SimpleHTTPServer'"
-echo -e "${YELLOW}[+]${RESET} 		jn='john --wordlist=/usr/share/wordlists/rockyou.txt'"
-echo -e "${YELLOW}[+]${RESET} 		xc='xclip -selection c.'"
-echo -e "${YELLOW}[+]${RESET} 		sS='searchsploit'"
+echo -e "${YELLOW}[+]${RESET}     netminer='mono /opt/NetworkMiner_2-2/NetworkMiner.exe'"
+echo -e "${YELLOW}[+]${RESET}     ws='python -m SimpleHTTPServer'"
+echo -e "${YELLOW}[+]${RESET}     jn='john --wordlist=/usr/share/wordlists/rockyou.txt'"
+echo -e "${YELLOW}[+]${RESET}     xc='xclip -selection c.'"
+echo -e "${YELLOW}[+]${RESET}     sS='searchsploit'"
 if [ "${vbox}" != "false" ]; then
-	echo -e "${YELLOW}[+]${RESET} 		ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}'"
+  echo -e "${YELLOW}[+]${RESET}     ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}'"
 fi
 
 echo -e "${YELLOW}[+]${RESET} Dash-to-Dock setting information:"
-echo -e "${YELLOW}[+]${RESET} 		Extended the dock to the edge of the screen."
-echo -e "${YELLOW}[+]${RESET} 			gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true"
-echo -e "${YELLOW}[+]${RESET} 		Reduced the icon size to 24px."
-echo -e "${YELLOW}[+]${RESET} 			gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 24"
-echo -e "${YELLOW}[+]${RESET} 		Stopped the dock from auto-hiding."
-echo -e "${YELLOW}[+]${RESET} 			gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true"
-echo -e "${YELLOW}[+]${RESET} 		"
+echo -e "${YELLOW}[+]${RESET}     Extended the dock to the edge of the screen."
+echo -e "${YELLOW}[+]${RESET}       gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true"
+echo -e "${YELLOW}[+]${RESET}     Reduced the icon size to 24px."
+echo -e "${YELLOW}[+]${RESET}       gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 24"
+echo -e "${YELLOW}[+]${RESET}     Stopped the dock from auto-hiding."
+echo -e "${YELLOW}[+]${RESET}       gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true"
+echo -e "${YELLOW}[+]${RESET}     "
 
 echo -e "${YELLOW}[+]${RESET} MLocate information:"
-echo -e "${YELLOW}[+]${RESET} 		updatedb.conf updated to include /media."
-echo -e "${YELLOW}[+]${RESET} 		Allows locating files in the VirtualBox share."
-echo -e "${YELLOW}[+]${RESET} 		Run 'sudo updatedb' to refresh MLocate database, then 'locate <filename>'."
+echo -e "${YELLOW}[+]${RESET}     updatedb.conf updated to include /media."
+echo -e "${YELLOW}[+]${RESET}     Allows locating files in the VirtualBox share."
+echo -e "${YELLOW}[+]${RESET}     Run 'sudo updatedb' to refresh MLocate database, then 'locate <filename>'."
+
+
 
 
 # reboot?
