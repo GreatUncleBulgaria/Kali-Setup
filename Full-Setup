@@ -124,7 +124,7 @@ while [[ "${#}" -gt 0 && ."${1}" == .-* ]]; do
     -vm|--vbox-mountpoint )
        vboxMountPoint="${1}"; shift;;
 
-    *) echo -e "${RED}[!]${RESET} Unknown option: ${RED}${opt}${RESET}" 1>&2 && exit 1;;
+    *) echo -e "${RED}[!]${RESET} Unknown option: ${RED}${opt}${1}${RESET}" 1>&2 && exit 1;;
    esac
 done
 
