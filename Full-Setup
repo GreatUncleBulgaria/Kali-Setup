@@ -35,7 +35,7 @@ echo -e "${GREEN}| |< < / _  | | |       \ \ / _  )  _) | | |  _ \        \ \ / 
 echo -e "${GREEN}| | \ ( ( | | | |   _____) | (/ /| |_| |_| | | | |   _____) | (___| |   | | | | | |__                     "
 echo -e "${GREEN}|_|  \_)_||_|_|_|  (______/ \____)\___)____| ||_/   (______/ \____)_|   |_| ||_/ \___)                    "
 echo -e "${GREEN}                                           |_|                            |_|                             "
-echo -e "${GREEN}Version 2.0"
+echo -e "${GREEN}Version 2.1"
 echo -e "${GREEN}"
 }
 # ascii art from: http://patorjk.com/software/taag/
@@ -44,7 +44,7 @@ echo -e "${GREEN}"
 
 
 function usage {
-    echo -e "${YELLOW}Usage: $0 -s [-d] [--ftp-port 2121] [-u GreatUncleBulgaria] [-h] [-r] [-v] [-vs Mounty] [-vm /media/MountyMcMountFace]"
+    echo -e "${YELLOW}Usage: $0 -s [-d] [--ftp-port 2121] [-u GreatUncleBulgaria] [-h] [-r] [-v] [-vs Mounty] [-vm /media/MountyMcMountFace/]"
     printf "\n"
     echo -e "${YELLOW}       -d | --dist-upgrade: Perform 'dist-upgrade', defaults to 'false', varies script execution time."
     echo -e "${YELLOW}       -ftp-port | --ftp-port: Specify the port for the FTP server to run on, defaults to 21-TCP."
@@ -126,7 +126,7 @@ while [[ "${#}" -gt 0 && ."${1}" == .-* ]]; do
     -vm|--vbox-mountpoint )
        vboxMountPoint="${1}"; shift;;
 
-    *) echo -e "${RED}[!]${RESET} Unknown option: ${RED}${x}${RESET}" 1>&2 && exit 1;;
+    *) echo -e "${RED}[!]${RESET} Unknown option: ${RED}${opt}${RESET}" 1>&2 && exit 1;;
    esac
 done
 
@@ -342,7 +342,6 @@ echo -e "${YELLOW}[+]${RESET} MLocate information:"
 echo -e "${YELLOW}[+]${RESET}     updatedb.conf updated to include /media."
 echo -e "${YELLOW}[+]${RESET}     Allows locating files in the VirtualBox share."
 echo -e "${YELLOW}[+]${RESET}     Run 'sudo updatedb' to refresh MLocate database, then 'locate <filename>'."
-
 
 
 
