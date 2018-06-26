@@ -58,7 +58,7 @@ function usage {
     echo -e "${YELLOW}                  This must match the shared folder name in the VM settings, defaults to 'VBOX-Share'."
     echo -e "${YELLOW}       -vm| --vbox-mountpoint: Specify the VirtualBox desired mount point."
     echo -e "${YELLOW}                  Requires -vs and fully qualified path, defaults to '/media/vbox-share'."
-	echo -e "${YELLOW}"
+    echo -e "${YELLOW}"
     echo -e "${YELLOW}       This script will install and configure the following;"
     for i in ${default[@]}; do echo -e "${YELLOW}           ${i}"; done 
 }
