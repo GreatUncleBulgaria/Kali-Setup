@@ -54,10 +54,10 @@ function usage {
     echo -e "${YELLOW}       -u | --service-username: Specify a username for service creation, defaults to 'User1'."
     echo -e "${YELLOW}                  This username will be used for all created service accounts."
     echo -e "${YELLOW}       -v | --vbox: Install VirtualBox guest editions."
-    echo -e "${YELLOW}       -vs| --vbox-sharename: Specify the VirtualBox shared folder name, requires -vm. "
+    echo -e "${YELLOW}       --vbox-sharename: Specify the VirtualBox shared folder name, requires --vbox-mountpoint. "
     echo -e "${YELLOW}                  This must match the shared folder name in the VM settings, defaults to 'VBOX-Share'."
-    echo -e "${YELLOW}       -vm| --vbox-mountpoint: Specify the VirtualBox desired mount point."
-    echo -e "${YELLOW}                  Requires -vs and fully qualified path, defaults to '/media/vbox-share'."
+    echo -e "${YELLOW}       --vbox-mountpoint: Specify the VirtualBox desired mount point."
+    echo -e "${YELLOW}                  Requires --vbox-sharename and fully qualified path, defaults to '/media/vbox-share'."
     echo -e "${YELLOW}"
     echo -e "${YELLOW}       This script will install and configure the following;"
     for i in ${default[@]}; do echo -e "${YELLOW}           ${i}"; done 
@@ -120,10 +120,10 @@ while [[ "${#}" -gt 0 && ."${1}" == .-* ]]; do
     -v|--virtualbox )
        vbox=true;;
 
-    -vs|--virtualbox-sharename )
+    --virtualbox-sharename )
        vboxShareName="${1}"; shift;;
 
-    -vs|--virtualbox-mountpoint )
+    --virtualbox-mountpoint )
        vboxMountPoint="${1}"; shift;;
 
     *) echo -e "${RED}[!]${RESET} Unknown option: ${RED}${x}${RESET}" 1>&2 && exit 1;;
