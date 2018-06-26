@@ -262,7 +262,7 @@ sed -e 's/^USE_INETD=true/USE_INETD=false/g' -i /etc/default/atftpd
 
 
 
-# add bashrc shortcuts
+# add global bashrc shortcuts
 
 echo -e "${BLUE}[+]${RESET} Assigning useful bash shortcuts."
 echo "alias netminer='mono /opt/NetworkMiner_2-2/NetworkMiner.exe'" >> /etc/bash.bashrc
@@ -272,7 +272,8 @@ echo "alias xc='xclip -selection c.'" >> /etc/bash.bashrc
 echo "alias sS='searchsploit'" >> /etc/bash.bashrc
 
 if [ "${vbox}" != "false" ]; then
-  echo "alias ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}'" >> /etc/bash.bashrc
+  echo "alias ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}' # Mount Share" >> /etc/bash.bashrc
+  echo "alias ums='umount ${vboxMountPoint}' # Un-Mount Share" >> /etc/bash.bashrc
 fi
 
 
@@ -324,7 +325,8 @@ echo -e "${YELLOW}[+]${RESET}     jn='john --wordlist=/usr/share/wordlists/rocky
 echo -e "${YELLOW}[+]${RESET}     xc='xclip -selection c.'"
 echo -e "${YELLOW}[+]${RESET}     sS='searchsploit'"
 if [ "${vbox}" != "false" ]; then
-  echo -e "${YELLOW}[+]${RESET}     ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}'"
+  echo -e "${YELLOW}[+]${RESET}     ms='mount -t vboxsf ${vboxShareName} ${vboxMountPoint}' # Mount Share"
+  echo -e "${YELLOW}[+]${RESET}     ums='umount ${vboxMountPoint}' # Un-Mount Share"
 fi
 
 echo -e "${YELLOW}[+]${RESET} Dash-to-Dock setting information:"
