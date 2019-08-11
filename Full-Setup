@@ -241,7 +241,7 @@ apt-get install ftp -y
 echo -e "${BLUE}[+]${RESET} Setting up PureFTPd."
 echo ${ftpport} > /etc/pure-ftpd/conf/Bind
 groupadd ftpgroup
-useradd -g ftpgroup -d /dev/null -s /etc ftpuser
+useradd -g ftpgroup -s /dev/null -d /srv/ftp ftpuser
 echo -e "${YELLOW}[+]${RESET} You will need to enter a password for the FTP user account and confirm it."
 pure-pw useradd ${username} -u ftpuser -d /srv/ftp
 pure-pw mkdb
